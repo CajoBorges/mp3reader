@@ -1,10 +1,11 @@
 from guizero import App, Text, PushButton, Slider
 from pygame import mixer
 import audio_metadata
+import datetime
 
 musica = "song.mp3"
 
-app = App(width="500", height="200")
+app = App(width="500", height="200", layout="grid")
 metadata = audio_metadata.load(musica)
 
 
@@ -25,19 +26,23 @@ def refresh_metadata():
     album.text = metadata["tags"]["album"][0]
     compositor.text = metadata["tags"]["artist"][0]
 
-nome_da_musica = Text(app, metadata["tags"]["title"][0], align="top")
-album = Text(app, metadata["tags"]["album"][0], align="top")
-compositor = Text(app, metadata["tags"]["artist"][0], align="top")
+nome_da_musica = Text(app, metadata["tags"]["title"][0], grid=[1,1])
+album = Text(app, metadata["tags"]["album"][0], grid=[1,2])
+compositor = Text(app, metadata["tags"]["artist"][0], grid=[1,3])
+songstart = Text(app, text="0:00", grid=[0,4])
+songslider = Slider(app, start=0, end=metadata["streaminfo"]["duration"], grid=[1,4])
+songend = Text(app, text=datetime.timedelta(seconds=int(metadata["streaminfo"]["duration"])), grid=[2,4])
 playbutton = PushButton(app,
                         text="Play/Pause",
                         align="left",
-                        command=play)
-librarybutton = PushButton(app, text="Abrir biblioteca", align="left")
-volume = Slider(app, align="right", command=volume)
+                        command=play, grid=[0,5])
+librarybutton = PushButton(app, text="Abrir biblioteca", grid=[1,5])
+volumetext = Text(app, "Volume", grid=[2,5])
+volume = Slider(app, command=volume, grid=[3,5])
 mixer.init()
 mixer.music.load(musica)
 mixer.music.play()
 mixer.music.set_volume(volume.value)
-volumetext = Text(app, "Volume", align="right")
+
 
 app.display()
