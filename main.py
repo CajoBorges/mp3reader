@@ -3,8 +3,6 @@ from pygame import mixer
 
 app = App(width="500", height="45")
 
-playing = False
-
 
 def volume():
     print(volume.value)
@@ -12,13 +10,10 @@ def volume():
 
 
 def play():
-    global playing
-    if playing:
+    if mixer.music.get_busy():
         mixer.music.pause()
-        playing = False
-    else:
-        mixer.music.unpause()
-        playing = True
+        return
+    mixer.music.unpause()
 
 
 playbutton = PushButton(app,
