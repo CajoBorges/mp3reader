@@ -48,7 +48,7 @@ def importarmusicas():
         try:
             listademusicas.append(metadata["tags"]["title"][0])
         except KeyError:
-            listademusicas.append(i - diretorioselecionado)
+            listademusicas.append(i.strip(diretorioselecionado))
         caminhosdemusicas.append(i)
 
 def selecionarmusicas():
