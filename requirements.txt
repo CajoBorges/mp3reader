@@ -2,3 +2,5 @@ guizero
 pygame
 audio_metadata
 pyinstaller
+tkinter
+os
