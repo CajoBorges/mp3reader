@@ -7,7 +7,7 @@ import os
 
 musica = "song.mp3"
 caminhosdemusicas = []
-app = App(width="380", height="160", layout="grid")
+app = App(title="mp3reader - FREE VERSION UPGRADE TO PREMIUM FOR 399€", width="380", height="160", layout="grid")
 metadata = audio_metadata.load(musica)
 songsliderbefore = 0
 playingt = 0
