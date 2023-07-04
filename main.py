@@ -22,11 +22,12 @@ def updatesongslider():
     update = True
 
 
-def songsliderjump():
+def songsliderjump(): # ora bolas
     global songsliderbefore, playingt
     if songslider.value != (songsliderbefore + 1):
-        mixer.music.rewind()
-        mixer.music.set_pos(playingt)
+        timetoset = songslider.value-mixer.music.get_pos()
+        print(timetoset)
+        mixer.music.play(timetoset)
         update = False
 
 
@@ -83,9 +84,14 @@ def abrir_biblioteca():
 
 def refresh_metadata():
     metadata = audio_metadata.load(musica)
-    nome_da_musica.value = metadata["tags"]["title"][0]
-    album.value = metadata["tags"]["album"][0]
-    compositor.value = metadata["tags"]["artist"][0]
+    try:
+        nome_da_musica.value = metadata["tags"]["title"][0]
+        album.value = metadata["tags"]["album"][0]
+        compositor.value = metadata["tags"]["artist"][0]
+    except KeyError:
+        nome_da_musica.value = musica.split("/")[-1].rstrip(".mp3")
+        album.value = musica.split("/")[-2]
+        compositor.value = "indefinido"
 
 menubar = MenuBar(app,
                   toplevel=["Opções"],
