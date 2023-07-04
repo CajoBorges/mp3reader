@@ -1,3 +1,4 @@
 guizero
 pygame
 audio_metadata
+pyinstaller

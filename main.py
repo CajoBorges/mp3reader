@@ -1,29 +1,34 @@
-from guizero import App, Text, PushButton, Slider
+from guizero import App, Text, PushButton, Slider, MenuBar
 from pygame import mixer
 import audio_metadata
 import datetime
 
 musica = "song.mp3"
 
-app = App(width="500", height="200", layout="grid")
+app = App(width="380", height="160", layout="grid")
 metadata = audio_metadata.load(musica)
 songsliderbefore = 0
 playingt = 0
+update = True
 
 def updatesongslider():
-    global songsliderbefore, playingt
-    songsliderbefore = songslider.value
-    playingt +=1
+    global songsliderbefore, playingt, update
+    if update and mixer.music.get_busy():
+        songsliderbefore = songslider.value
+        playingt += 1
+        songslider.value = playingt
+    update = True
 
 
 def songsliderjump():
     global songsliderbefore, playingt
     print("Songsliderjump was executed")
-    if songslider.value!=(songsliderbefore+1):
+    if songslider.value != (songsliderbefore + 1):
         print("Manual change check was passed")
-        mixer.music.play(start=playingt)
+        mixer.music.rewind()
+        mixer.music.set_pos(playingt)
         print(songslider.value)
-    songslider.value = playingt
+        update = False
 
 
 def volume():
@@ -36,6 +41,8 @@ def play():
         return
     mixer.music.unpause()
 
+def abrir_biblioteca():
+    return 
 
 def refresh_metadata():
     metadata = audio_metadata.load(musica)
@@ -43,6 +50,11 @@ def refresh_metadata():
     album.text = metadata["tags"]["album"][0]
     compositor.text = metadata["tags"]["artist"][0]
 
+menubar = MenuBar(app,
+                  toplevel=["Opções"],
+                  options=[
+                      [["Biblioteca de músicas", abrir_biblioteca], ["Recarregar metadados", refresh_metadata]]
+                  ])
 
 nome_da_musica = Text(app, metadata["tags"]["title"][0], grid=[1, 1])
 album = Text(app, metadata["tags"]["album"][0], grid=[1, 2])
@@ -55,7 +67,7 @@ songslider = Slider(
     grid=[1, 4],
     command=songsliderjump,
 )
-songend = Text(
+songend = Text( 
     app,
     text=datetime.timedelta(seconds=int(metadata["streaminfo"]["duration"] / 2)),
     grid=[2, 4],
