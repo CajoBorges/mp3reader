@@ -8,19 +8,22 @@ musica = "song.mp3"
 app = App(width="500", height="200", layout="grid")
 metadata = audio_metadata.load(musica)
 songsliderbefore = 0
+playingt = 0
 
 def updatesongslider():
-    global songsliderbefore
+    global songsliderbefore, playingt
     songsliderbefore = songslider.value
-    songslider.value = mixer.music.get_pos() / 1000
+    playingt +=1
 
 
 def songsliderjump():
-    global songsliderbefore
+    global songsliderbefore, playingt
+    print("Songsliderjump was executed")
     if songslider.value!=(songsliderbefore+1):
-        mixer.music.play()
+        print("Manual change check was passed")
+        mixer.music.play(start=playingt)
         print(songslider.value)
-        mixer.music.set_pos(songslider.value)
+    songslider.value = playingt
 
 
 def volume():
